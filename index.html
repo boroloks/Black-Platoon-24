@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Platoon Sports Club</title>
+    <style>
+        body {
+            background: linear-gradient(to right, black, red, white);
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h1, h2, p {
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        form input, form select {
+            margin: 10px 0;
+            padding: 10px;
+            width: 80%;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: red;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="intro">
+        <h1>Black Platoon</h1>
+        <h2>Welcome to Black Platoon Sports Club</h2>
+        <p>Black Platoon is a Football club since 2023. The club plays cricket and football. We are Runners up of SPL 2023 AND 2024.</p>
+        <form id="registrationForm">
+            <input type="text" id="playerName" placeholder="Player Name" required>
+            <input type="text" id="schoolName" placeholder="School Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="tel" id="phoneNumber" placeholder="Phone Number" required>
+            <input type="file" id="picUpload" accept="image/*" required>
+            <select id="sport" required>
+                <option value="" disabled selected>Select Sport</option>
+                <option value="cricket">Cricket</option>
+                <option value="football">Football</option>
+                <option value="both">Both</option>
+            </select>
+            <button type="button" onclick="submitForm()">Register</button>
+        </form>
+        <div class="button-container">
+            <button onclick="showPage('cricketTeam')">Cricket Team Information</button>
+            <button onclick="showPage('footballTeam')">Football Players Information</button>
+            <button onclick="showPage('highlights')">Match Highlights</button>
+            <button onclick="showPage('notices')">Notices</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="cricketTeam">
+        <h1>Cricket Team Information</h1>
+        <div id="cricketInfo"></div>
+        <button onclick="showPage('intro')">Back to Home</button>
+    </div>
+
+    <div class="container hidden" id="footballTeam">
+        <h1>Football Players Information</h1>
+        <div id="footballInfo"></div>
+        <button onclick="showPage('intro')">Back to Home</button>
+    </div>
+
+    <div class="container hidden" id="highlights">
+        <h1>Match Highlights</h1>
+        <div id="matchHighlights">
+            <!-- Match highlights content goes here -->
+        </div>
+        <button onclick="showPage('intro')">Back to Home</button>
+    </div>
+
+    <div class="container hidden" id="notices">
+        <h1>Notices</h1>
+        <div id="noticesContent">
+            <!-- Notices content goes here -->
+        </div>
+        <button onclick="showPage('intro')">Back to Home</button>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            const pages = ['intro', 'cricketTeam', 'footballTeam', 'highlights', 'notices'];
+            pages.forEach(page => {
+                document.getElementById(page).classList.add('hidden');
+            });
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+
+        function submitForm() {
+            const playerName = document.getElementById('playerName').value;
+            const schoolName = document.getElementById('schoolName').value;
+            const email = document.getElementById('email').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const picUpload = document.getElementById('picUpload').files[0];
+            const sport = document.getElementById('sport').value;
+
+            if (!playerName || !schoolName || !email || !phoneNumber || !picUpload || !sport) {
+                alert('Please fill out all fields.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const picData = reader.result;
+
+                const playerInfo = `
+                    <div>
+                        <img src="${picData}" alt="${playerName}" width="100">
+                        <p><strong>Name:</strong> ${playerName}</p>
+                        <p><strong>School:</strong> ${schoolName}</p>
+                        <p><strong>Email:</strong> ${email}</p>
+                        <p><strong>Phone:</strong> ${phoneNumber}</p>
+                    </div>
+                `;
+
+                if (sport === 'cricket' || sport === 'both') {
+                    document.getElementById('cricketInfo').innerHTML += playerInfo;
+                }
+
+                if (sport === 'football' || sport === 'both') {
+                    document.getElementById('footballInfo').innerHTML += playerInfo;
+                }
+
+                alert('Registration successful!');
+                document.getElementById('registrationForm').reset();
+            };
+
+            reader.readAsDataURL(picUpload);
+        }
+    </script>
+</body>
+</html>
